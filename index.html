@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Zf2authacl : ZF2-Auth-ACL" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Zf2authacl</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/Mohit-Singh/ZF2AuthAcl">View on GitHub</a>
+
+          <h1 id="project_title">Zf2authacl</h1>
+          <h2 id="project_tagline">ZF2-Auth-ACL</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/Mohit-Singh/ZF2AuthAcl/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/Mohit-Singh/ZF2AuthAcl/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="zf2-auth-acl" class="anchor" href="#zf2-auth-acl"><span class="octicon octicon-link"></span></a>ZF2-Auth-ACL</h1>
+
+<h2>
+<a name="branch-zfcuser_acl" class="anchor" href="#branch-zfcuser_acl"><span class="octicon octicon-link"></span></a>Branch: zfcuser_acl</h2>
+
+<p>This this the ZF2 ACL module forked from arvind2110/ZF2-Auth-ACL and Plugged with zfcuser module. it will provide role base access and switching between roles , provides custom permission denied template , plug ins to access role at controller , view and module level. All the role, resource and permission are stored in databases.</p>
+
+<h2>
+<a name="how-to-use-it" class="anchor" href="#how-to-use-it"><span class="octicon octicon-link"></span></a>How to Use it</h2>
+
+<p>using composer add </p>
+
+<pre><code>  "require" : {
+       ...
+    "mohit-singh/zf2auth-acl": "V1.0.0"
+  }
+</code></pre>
+
+<p>then copy and rename the following,</p>
+
+<pre><code>copy vendor/mohit-singh/zf2auth-acl/config/aclAuth.local.php.dist to config/autoload/aclAuth.local.php
+</code></pre>
+
+<p>Add the depended table from </p>
+
+<pre><code>vendor/mohit-singh/zf2auth-acl/data/data.sql
+</code></pre>
+
+<p>ADD role for user in table  e.g.</p>
+
+<pre><code>INSERT INTO `role` (`role_name`, `status`) VALUES ('Role1', 'Active');
+INSERT INTO `role` (`role_name`, `status`) VALUES ('Role2', 'Active');
+INSERT INTO `role` (`role_name`, `status`) VALUES ('Role3', 'Active');
+</code></pre>
+
+<p>ADD resources, resources are your controller name through which you invoke your controller, for me it's "Application\Controller\Index" e.g.</p>
+
+<pre><code>INSERT INTO `resource` (`resource_name`) VALUES ('Application\\Controller\\Index');
+</code></pre>
+
+<p>ADD Permissions , permission are the action, you have to associated all action with there controller resource  e.g.</p>
+
+<pre><code>INSERT INTO `permission` (`permission_name`, `resource_id`) VALUES ('index', 1);
+INSERT INTO `permission` (`permission_name`, `resource_id`) VALUES ('show', 1);
+</code></pre>
+
+<p>ADD role permission , you have to decided which role have which permission
+e.g.</p>
+
+<pre><code>INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES (1, 1);
+INSERT INTO `role_permission` (`role_id`, `permission_id`) VALUES (1, 2);
+</code></pre>
+
+<p>ADD user role , you have to decide which user have which role , this can be done manually or using some custom script.</p>
+
+<pre><code>INSERT INTO `user_role` (`user_id`, `role_id`) VALUES (1, 1);
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES (2, 2);
+</code></pre>
+
+<p>NOTE:- please check the aclAuth.local.php con-fig for the default role, it Should be one of the role  whatever you insert in the database.</p>
+
+<p>after all these configuration is done you are ready to use ACL module</p>
+
+<h2>
+<a name="services" class="anchor" href="#services"><span class="octicon octicon-link"></span></a>Services</h2>
+
+<p>Remove ACL from a URL and make it global, access to all ,
+add link here</p>
+
+<div class="highlight highlight-php"><pre><span class="c1">// in config/autoload/aclAuth.local.php</span>
+<span class="s1">'globalList'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+              <span class="s1">'Application\Controller\Index-index'</span>
+       <span class="p">),</span>
+</pre></div>
+
+<p>Remove ACL from a URL and make it global before login ,
+add link here</p>
+
+<div class="highlight highlight-php"><pre><span class="c1">// in config/autoload/aclAuth.local.php</span>
+<span class="s1">'beforeLoginList'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+              <span class="s1">'Application\Controller\Index-index'</span>
+       <span class="p">),</span>
+</pre></div>
+
+<p>Custom template for permission denied, add new template path here</p>
+
+<div class="highlight highlight-php"><pre><span class="c1">// in config/autoload/aclAuth.local.php</span>
+<span class="s1">'ACL_Template'</span> <span class="o">=&gt;</span><span class="s1">'zf2-auth-acl/index/permission.phtml'</span>
+</pre></div>
+
+<p>Role base services at controller</p>
+
+<div class="highlight highlight-php"><pre><span class="c1">// Check user has role or not , return true, false</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">userAuthRole</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">userHasRole</span><span class="p">();</span>
+
+<span class="c1">//Get  user current role</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">userAuthRole</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getRoleName</span><span class="p">();</span>
+
+<span class="c1">//get All valid role for the current user</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">userAuthRole</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getUserValidRole</span><span class="p">();</span>
+
+<span class="c1">//Switch between roles</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">userAuthRole</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">switchRole</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">);</span>
+</pre></div>
+
+<p>at view level</p>
+
+<div class="highlight highlight-php"><pre><span class="c1">// Check user has role or not , return true, false</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">roleAuth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">userHasRole</span><span class="p">();</span>
+
+<span class="c1">//Get  user current role</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">roleAuth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getRoleName</span><span class="p">();</span>
+
+<span class="c1">//get All valid role for the current user</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">roleAuth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">getUserValidRole</span><span class="p">();</span>
+
+<span class="c1">//Switch between roles</span>
+<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">roleAuth</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">switchRole</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">);</span>
+</pre></div>
+
+<p>at module level</p>
+
+<div class="highlight highlight-php"><pre><span class="nv">$roleAtuth</span> <span class="o">=</span> <span class="nv">$serviceManager</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'roleAuthService'</span><span class="p">);</span>
+
+<span class="c1">// Check user has role or not , return true, false</span>
+<span class="nv">$roleAtuth</span><span class="o">-&gt;</span><span class="na">userHasRole</span><span class="p">();</span>
+
+<span class="c1">//Get  user current role</span>
+<span class="nv">$roleAtuth</span><span class="o">-&gt;</span><span class="na">getRoleName</span><span class="p">();</span>
+
+<span class="c1">//get All valid role for the current user</span>
+<span class="nv">$roleAtuth</span><span class="o">-&gt;</span><span class="na">getUserValidRole</span><span class="p">();</span>
+
+<span class="c1">//Switch between roles</span>
+<span class="nv">$roleAtuth</span><span class="o">-&gt;</span><span class="na">switchRole</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">);</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Zf2authacl maintained by <a href="https://github.com/Mohit-Singh">Mohit-Singh</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
