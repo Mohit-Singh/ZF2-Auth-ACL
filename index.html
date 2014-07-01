@@ -1,36 +1,44 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Zf2authacl : ZF2-Auth-ACL" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Zf2authacl by Mohit-Singh</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Zf2authacl</title>
   </head>
-
   <body>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/Mohit-Singh/ZF2AuthAcl">View on GitHub</a>
+      <header>
+        <h1>Zf2authacl</h1>
+        <p>ZF2-Auth-ACL</p>
+      </header>
 
-          <h1 id="project_title">Zf2authacl</h1>
-          <h2 id="project_tagline">ZF2-Auth-ACL</h2>
+      <div id="banner">
+        <span id="logo"></span>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/Mohit-Singh/ZF2AuthAcl/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/Mohit-Singh/ZF2AuthAcl/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+        <a href="https://github.com/Mohit-Singh/ZF2AuthAcl" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/Mohit-Singh/ZF2AuthAcl/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/Mohit-Singh/ZF2AuthAcl/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
         <h1>
 <a name="zf2-auth-acl" class="anchor" href="#zf2-auth-acl"><span class="octicon octicon-link"></span></a>ZF2-Auth-ACL</h1>
 
@@ -46,7 +54,7 @@
 
 <pre><code>  "require" : {
        ...
-    "mohit-singh/zf2auth-acl": "V1.0.0"
+    "mohit-singh/zf2auth-acl": "V1.0.1"
   }
 </code></pre>
 
@@ -168,18 +176,45 @@ add link here</p>
 <span class="c1">//Switch between roles</span>
 <span class="nv">$roleAtuth</span><span class="o">-&gt;</span><span class="na">switchRole</span><span class="p">(</span><span class="s1">'ADMIN'</span><span class="p">);</span>
 </pre></div>
-      </section>
-    </div>
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Zf2authacl maintained by <a href="https://github.com/Mohit-Singh">Mohit-Singh</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+<p>It Also provide cache mechanism to store role, resource and permission in cache.
+you can configure the caching here</p>
+
+<div class="highlight highlight-php"><pre>    <span class="sd">/**</span>
+<span class="sd">     * This cache is used the disk file system to store date with the following options.</span>
+<span class="sd">     */</span> 
+    <span class="s1">'fileCache'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+        <span class="s1">'cache_dir'</span> <span class="o">=&gt;</span> <span class="s1">'./data/cache'</span><span class="p">,</span>
+        <span class="s1">'namespace'</span> <span class="o">=&gt;</span> <span class="s1">'systemCache'</span><span class="p">,</span>
+        <span class="s1">'dir_level'</span> <span class="o">=&gt;</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s1">'filePermission'</span> <span class="o">=&gt;</span> <span class="mo">0666</span><span class="p">,</span>
+        <span class="s1">'dirPermission'</span> <span class="o">=&gt;</span> <span class="mo">0755</span>
+    <span class="p">),</span>
+</pre></div>
+
+<p>you can also access file system cache in your project like this</p>
+
+<div class="highlight highlight-php"><pre>
+<span class="c1">// store item in filesystem cache</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getServiceLocator</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'Zend\Cache\Storage\Filesystem'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">setItem</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">,</span> <span class="s1">'taxi'</span><span class="p">);</span>
+
+
+<span class="c1">// get item from filesystem cache</span>
+        <span class="k">echo</span> <span class="s1">'Cached Item is:- '</span><span class="o">.</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getServiceLocator</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'Zend\Cache\Storage\Filesystem'</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">getItem</span><span class="p">(</span><span class="s1">'foo'</span><span class="p">);</span>
+
+</pre></div>
+
+<p>you are using file system cache so you have to give permission to the cache folder</p>
+
+<pre><code>&gt; sudo chmod -R 0777 data/cache
+</code></pre>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/Mohit-Singh">Mohit-Singh</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></small></p>
       </footer>
     </div>
-
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
-
   </body>
 </html>
