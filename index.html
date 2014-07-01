@@ -58,6 +58,14 @@
   }
 </code></pre>
 
+<p>Enable the module in application.config.php</p>
+
+<div class="highlight highlight-php"><pre> <span class="s1">'modules'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span>
+    <span class="o">...</span>
+        <span class="s1">'ZF2AuthAcl'</span>
+    <span class="p">),</span>
+</pre></div>
+
 <p>then copy and rename the following,</p>
 
 <pre><code>copy vendor/mohit-singh/zf2auth-acl/config/aclAuth.local.php.dist to config/autoload/aclAuth.local.php
